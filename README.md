@@ -1,23 +1,31 @@
-# tsdown-starter
+# vite-plugin-svg-icons
 
-A starter for creating a TypeScript package.
+A Vite plugin to manage SVG icons efficiently.
 
-## Development
+## 使用
 
-- Install dependencies:
+```js
+import svgIconPlugin from '@jkun/vite-plugin-svg-icons'
 
-```bash
-npm install
+export default defineConfig({
+    return {
+        plugins: [svgIconPlugin({
+            dir: ''
+        })]
+    }
+})
 ```
 
-- Run the unit tests:
+## 开发
+
+- 安装依赖
 
 ```bash
-npm run test
+pnpm i
 ```
 
-- Build the library:
+- 构建库
 
 ```bash
-npm run build
+pnpm build
 ```
