@@ -1,6 +1,6 @@
 {
   "name": "@jkun/vite-plugin-svg-icons",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A Vite plugin to manage SVG icons efficiently.",
   "type": "module",
   "license": "MIT",
