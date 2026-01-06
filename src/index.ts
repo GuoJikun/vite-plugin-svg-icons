@@ -21,6 +21,7 @@ const watchSvgDirectory = (
     dir: string,
     onChange: (eventType: string, filename: string | null) => void
 ): FSWatcher | null => {
+    console.log("################################################");
     if (!fs.existsSync(dir)) {
         console.warn(`Cannot watch directory (not found): ${dir}`);
         return null;
@@ -30,7 +31,7 @@ const watchSvgDirectory = (
 
     const watcher = fs.watch(
         dir,
-        { recursive: false },
+        { recursive: true },
         (eventType, filename) => {
             if (filename && filename.endsWith(".svg")) {
                 console.log(`SVG file ${eventType}: ${filename}`);
@@ -134,8 +135,9 @@ const svgIconsPlugin = (config: Config) => {
 
     return {
         name: "vite-plugin-svg-icons",
+
         configureServer(server: any) {
-            // 如果开启了 watch 选项，监听 SVG 目录的变化
+            // 如果开启了 watch 选项，监听 SVG 目录的变化（仅在开发模式）
             if (watch) {
                 watcher = watchSvgDirectory(iconsDir, (eventType, filename) => {
                     // 触发热更新
@@ -146,6 +148,7 @@ const svgIconsPlugin = (config: Config) => {
                 });
             }
         },
+
         buildEnd() {
             // 构建结束时关闭文件监听
             if (watcher) {
@@ -153,6 +156,7 @@ const svgIconsPlugin = (config: Config) => {
                 console.log("Stopped watching SVG directory");
             }
         },
+
         transformIndexHtml(html: string) {
             const svgSprite = loadAllSvgIcons();
 
