@@ -1,19 +1,81 @@
 # vite-plugin-svg-icons
 
-A Vite plugin to manage SVG icons efficiently.
+一个高效管理 SVG 图标的 Vite 插件，自动将 SVG 文件转换为 SVG Sprite。
 
-## 使用
+## 特性
+
+✨ **自动化** - 自动扫描目录并生成 SVG sprite  
+🔥 **热更新** - 支持开发模式下的文件监听和热更新  
+⚡️ **优化** - 内置 SVGO 优化，减小文件体积  
+🎯 **类型安全** - 完整的 TypeScript 类型支持  
+🔧 **可配置** - 灵活的配置选项，满足不同需求
+
+## 安装
+
+```bash
+# npm
+npm install @jkun/vite-plugin-svg-icons -D
+
+# pnpm
+pnpm add @jkun/vite-plugin-svg-icons -D
+
+# yarn
+yarn add @jkun/vite-plugin-svg-icons -D
+```
+
+## 快速开始
+
+### 1. 配置插件
+
+在 `vite.config.js` 中添加插件：
 
 ```js
+import { defineConfig } from 'vite'
 import svgIconPlugin from '@jkun/vite-plugin-svg-icons'
 
 export default defineConfig({
-    return {
-        plugins: [svgIconPlugin({
-            dir: ''
-        })]
-    }
+    plugins: [
+        svgIconPlugin({
+            dir: 'src/assets/icons' // SVG 图标目录
+        })
+    ]
 })
+```
+
+### 2. 准备 SVG 图标
+
+在指定目录下放置你的 SVG 文件：
+
+```
+src/assets/icons/
+├── home.svg
+├── user.svg
+└── settings.svg
+```
+
+### 3. 使用图标
+
+在 HTML 中使用 SVG sprite：
+
+```html
+<!-- 使用默认前缀 'icon' -->
+<svg class="icon">
+    <use xlink:href="#icon-home"></use>
+</svg>
+
+<svg class="icon">
+    <use xlink:href="#icon-user"></use>
+</svg>
+```
+
+添加样式：
+
+```css
+.icon {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+}
 ```
 
 ### 配置选项
@@ -127,6 +189,29 @@ export default defineConfig({
 })
 ```
 
+## 工作原理
+
+插件会在构建时：
+
+1. 扫描指定目录下的所有 `.svg` 文件
+2. 使用 SVGO 优化每个 SVG 文件
+3. 将 SVG 转换为 `<symbol>` 标签
+4. 生成一个包含所有图标的 SVG sprite
+5. 自动注入到 HTML 的 `<body>` 标签末尾
+
+生成的 sprite 格式：
+
+```html
+<svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0; overflow: hidden;">
+    <symbol id="icon-home" viewBox="0 0 24 24">
+        <!-- SVG 内容 -->
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24">
+        <!-- SVG 内容 -->
+    </symbol>
+</svg>
+```
+
 ## 开发
 
 -   安装依赖
@@ -140,3 +225,80 @@ pnpm i
 ```bash
 pnpm build
 ```
+
+## 常见问题
+
+### 图标不显示？
+
+1. 检查 SVG 文件路径是否正确
+2. 确保 SVG 文件格式正确
+3. 检查图标 ID 是否匹配（前缀 + 文件名）
+4. 查看浏览器控制台是否有错误
+
+### 如何自定义图标颜色？
+
+移除 SVG 文件中的 `fill` 和 `stroke` 属性，然后通过 CSS 控制：
+
+```js
+svgIconPlugin({
+    dir: 'src/assets/icons',
+    svgoConfig: {
+        plugins: [
+            {
+                name: 'removeAttrs',
+                params: {
+                    attrs: '(fill|stroke)'
+                }
+            }
+        ]
+    }
+})
+```
+
+使用 CSS：
+
+```css
+.icon {
+    fill: #ff6b6b; /* 自定义颜色 */
+}
+```
+
+### 如何在 Vue/React 中使用？
+
+**Vue:**
+
+```vue
+<template>
+    <svg class="icon">
+        <use :xlink:href="`#icon-${name}`"></use>
+    </svg>
+</template>
+
+<script setup>
+defineProps({
+    name: String
+})
+</script>
+```
+
+**React:**
+
+```jsx
+function Icon({ name }) {
+    return (
+        <svg className="icon">
+            <use xlinkHref={`#icon-${name}`}></use>
+        </svg>
+    )
+}
+```
+
+## 许可证
+
+[MIT](./LICENSE)
+
+## 相关链接
+
+- [GitHub 仓库](https://github.com/GuoJikun/vite-plugin-svg-icons)
+- [问题反馈](https://github.com/GuoJikun/vite-plugin-svg-icons/issues)
+- [SVGO 文档](https://github.com/svg/svgo)
