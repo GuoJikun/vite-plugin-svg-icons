@@ -2,6 +2,8 @@
 
 一个高效管理 SVG 图标的 Vite 插件，自动将 SVG 文件转换为 SVG Sprite。
 
+简体中文 | [English](./README_EN.md)
+
 ## 特性
 
 ✨ **自动化** - 自动扫描目录并生成 SVG sprite  
